@@ -50,13 +50,13 @@ contract Task4 with Deployable {
   seed: Int as uint128;
   nft: Address?;
   owner: Address?;
-  time: Int as uint32 = 0;
+  unlockedAt: Int as uint32 = 0;
   
   init(seed: Int) {
     self.seed = seed; // needed to deploy multiple smart contracts copies from one admin address
     self.nft = null;
     self.owner = null;
-    self.time = 0;
+    self.unlockedAt = 0;
   }
 
   receive(msg: OwnershipAssigned) {
@@ -80,14 +80,19 @@ contract Task4 with Deployable {
 
     self.nft = sender();
     self.owner = msg.prevOwner;
-    self.time = msg.forwardPayload.loadUint(32);
+    self.unlockedAt = now() + msg.forwardPayload.loadUint(32);
   }
 
   receive(msg: NftWithdrawal) {
+    require(self.owner == sender(), "Invalid sender");
   }
 
   get fun time(): Int {
-    return self.time;
+    if (self.unlockedAt == 0) {
+      return 0;
+    } else {
+      return max(0, self.unlockedAt - now());
+    }
   }
 
   get fun nft(): Address? {
