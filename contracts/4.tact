@@ -84,14 +84,14 @@ contract Task4 with Deployable {
     require(self.owner == sender(), "Invalid sender");
 
     if (self.unlockedAt > now()) {
-      // send(SendParameters{
-      //   to: sender(),
-      //   value: 0,
-      //   bounce: false,
-      //   mode: 66,
-      //   body: "NFT is still locked".asComment()
-      // });
-      self.reply("NFT is still locked".asComment());
+      send(SendParameters{
+        to: sender(),
+        value: 0,
+        bounce: false,
+        mode: 66,
+        body: "NFT is still locked".asComment()
+      });
+      // self.reply("NFT is still locked".asComment());
       return;
     }
 
@@ -105,7 +105,7 @@ contract Task4 with Deployable {
         newOwner: self.owner!!,
         responseDestination: self.owner!!,
         customPayload: emptyCell(),
-        forwardAmount: myBalance() - 1,
+        forwardAmount: 0,
         forwardPayload: emptySlice()
       }.toCell()
     });
@@ -116,11 +116,7 @@ contract Task4 with Deployable {
   }
 
   get fun time(): Int {
-    if (self.unlockedAt == 0) {
-      return 0;
-    } else {
-      return max(0, self.unlockedAt - now());
-    }
+    return max(0, self.unlockedAt - now());
   }
 
   get fun nft(): Address? {
