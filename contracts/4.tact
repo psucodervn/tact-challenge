@@ -89,9 +89,9 @@ contract Task4 with Deployable {
     }
 
     send(SendParameters{
-      to: msg.nftAddress,
-      value: 0,
-      mode: 66,
+      to: self.nft!!,
+      value: myBalance() - ton("0.1"),
+      mode: 0,
       body: Transfer{
         queryId: msg.queryId,
         newOwner: sender(),
