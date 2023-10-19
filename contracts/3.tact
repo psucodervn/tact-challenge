@@ -95,7 +95,7 @@ contract Task3 with Deployable {
         self.refundToSender(msg.from, msg.amount);
       }
     } else {
-      nativeThrowWhen(123, true);
+      throw(123);
     }
   }
 
