@@ -66,7 +66,7 @@ contract Task4 with Deployable {
         body: Transfer{
           queryId: msg.queryId,
           newOwner: msg.prevOwner,
-          responseDestination: msg.prevOwner,
+          responseDestination: myAddress(),
           customPayload: emptyCell(),
           forwardAmount: 0,
           forwardPayload: emptySlice()
@@ -84,14 +84,7 @@ contract Task4 with Deployable {
     require(self.owner == sender(), "Invalid sender");
 
     if (self.unlockedAt > now()) {
-      send(SendParameters{
-        to: sender(),
-        value: 0,
-        bounce: false,
-        mode: 66,
-        body: "NFT is still locked".asComment()
-      });
-      // self.reply("NFT is still locked".asComment());
+      self.reply("NFT is still locked".asComment());
       return;
     }
 
@@ -103,7 +96,7 @@ contract Task4 with Deployable {
       body: Transfer{
         queryId: msg.queryId,
         newOwner: self.owner!!,
-        responseDestination: self.owner!!,
+        responseDestination: myAddress(),
         customPayload: emptyCell(),
         forwardAmount: 0,
         forwardPayload: emptySlice()
