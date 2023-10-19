@@ -70,10 +70,10 @@ contract Task3 with Deployable {
   receive(msg: TokenNotification) {
     if (sender() == self.jettonAddressB) {
       if (msg.from == self.owner) {
-        self.updateAmount(self.jettonAddressB, msg.amount);
+        self.bAmount = self.bAmount + msg.amount;
         return;
       }
-      let amountOfAJettonToSend: Int = (self.aAmount * 1000000000 / self.bAmount) * msg.amount / 1000000000;
+      let amountOfAJettonToSend: Int = (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
       if (amountOfAJettonToSend <= self.aAmount) {
         self.sendTo(self.jettonAddressA, msg.from, amountOfAJettonToSend);
         self.aAmount = self.aAmount - amountOfAJettonToSend;
@@ -83,10 +83,10 @@ contract Task3 with Deployable {
       }
     } else if (sender() == self.jettonAddressA) {
       if (msg.from == self.owner) {
-        self.updateAmount(self.jettonAddressA, msg.amount);
+        self.aAmount = self.aAmount + msg.amount;
         return;
       }
-      let amountOfBJettonToSend: Int = (self.bAmount * 1000000000 / self.aAmount) * msg.amount / 1000000000;
+      let amountOfBJettonToSend: Int = (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal;
       if (amountOfBJettonToSend <= self.bAmount) {
         self.sendTo(self.jettonAddressB, msg.from, amountOfBJettonToSend);
         self.bAmount = self.bAmount - amountOfBJettonToSend;
@@ -95,25 +95,15 @@ contract Task3 with Deployable {
         self.refundToSender(msg.from, msg.amount);
       }
     } else {
-      throw(123);
-    }
-  }
-
-  fun updateAmount(token: Address, amount: Int) {
-    if (token == self.jettonAddressA) {
-      self.aAmount = self.aAmount + amount;
-    } else if (token == self.jettonAddressB) {
-      self.bAmount = self.bAmount + amount;
-    } else {
-      throw(123);
+      nativeThrowWhen(123, true);
     }
   }
 
   fun sendTo(token: Address, dst: Address, amount: Int) {
     send(SendParameters{
       to: token,
-      value: ton("0.1"),
-      mode: 0,
+      value: 0,
+      mode: 64,
       bounce: true,
       body: TokenTransfer{
         queryId: 0,
@@ -147,9 +137,9 @@ contract Task3 with Deployable {
   
   get fun price(jetton: Address): Int {
     if (jetton == self.jettonAddressB) {
-    return self.aAmount * 1000000000 / self.bAmount;
+    return self.aAmount * self.decimal / self.bAmount;
     } else {
-      return self.bAmount * 1000000000 / self.aAmount;
+      return self.bAmount * self.decimal / self.aAmount;
     }
   }
   
