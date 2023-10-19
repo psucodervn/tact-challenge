@@ -90,8 +90,8 @@ contract Task4 with Deployable {
 
     send(SendParameters{
       to: self.nft!!,
-      value: myBalance() - ton("0.1"),
-      mode: 0,
+      value: 0,
+      mode: 64 + 128 + 32,
       body: Transfer{
         queryId: msg.queryId,
         newOwner: sender(),
@@ -102,9 +102,9 @@ contract Task4 with Deployable {
       }.toCell()
     });
 
-    self.owner = null;
-    self.nft = null;
-    self.unlockedAt = 0;
+    // self.owner = null;
+    // self.nft = null;
+    // self.unlockedAt = 0;
   }
 
   get fun time(): Int {
