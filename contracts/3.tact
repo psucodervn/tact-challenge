@@ -81,11 +81,15 @@ contract Task3 with Deployable {
       let amountOfAJettonToSend: Int = (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
       if (amountOfAJettonToSend <= self.aAmount) {
       } else {
+        self.refundToSender(msg.from, msg.amount);
+        return;
       }
     } else if (msg.from == self.jettonAddressB) {
       let amountOfBJettonToSend: Int = (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal;
       if (amountOfBJettonToSend <= self.bAmount) {
       } else {
+        self.refundToSender(msg.from, msg.amount);
+        return;
       }
     }
   }
@@ -98,6 +102,24 @@ contract Task3 with Deployable {
     } else {
       throw(123);
     }
+  }
+
+  fun refundToSender(dst: Address, amount: Int) {
+    send(SendParameters{
+      to: sender(),
+      value: 0,
+      mode: SendRemainingValue + SendIgnoreErrors,
+      bounce: false,
+      body: TokenTransfer{
+        queryId: 0,
+        amount: amount,
+        destination: dst,
+        responseDestination: myAddress(),
+        customPayload: null,
+        forwardTonAmount: ton("0.01"),
+        forwardPayload: emptySlice()
+      }.toCell()
+    });
   }
   
   get fun price(jetton: Address): Int {
