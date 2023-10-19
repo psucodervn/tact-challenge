@@ -69,7 +69,7 @@ contract Task3 with Deployable {
 
   receive(msg: TokenNotification) {
     if (msg.from != self.jettonAddressA && msg.from != self.jettonAddressB) {
-      throw(1);
+      throw(123);
     }
 
     if (sender() == self.owner) {
@@ -80,16 +80,20 @@ contract Task3 with Deployable {
     if (msg.from == self.jettonAddressA) {
       let amountOfAJettonToSend: Int = (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
       if (amountOfAJettonToSend <= self.aAmount) {
+        self.sendTo(self.jettonAddressA, msg.from, amountOfAJettonToSend);
+        self.aAmount = self.aAmount - amountOfAJettonToSend;
+        self.bAmount = self.bAmount + msg.amount;
       } else {
         self.refundToSender(msg.from, msg.amount);
-        return;
       }
     } else if (msg.from == self.jettonAddressB) {
       let amountOfBJettonToSend: Int = (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal;
       if (amountOfBJettonToSend <= self.bAmount) {
+        self.sendTo(self.jettonAddressB, msg.from, amountOfBJettonToSend);
+        self.bAmount = self.bAmount - amountOfBJettonToSend;
+        self.aAmount = self.aAmount + msg.amount;
       } else {
         self.refundToSender(msg.from, msg.amount);
-        return;
       }
     }
   }
@@ -102,6 +106,24 @@ contract Task3 with Deployable {
     } else {
       throw(123);
     }
+  }
+
+  fun sendTo(token: Address, dst: Address, amount: Int) {
+    send(SendParameters{
+      to: token,
+      value: ton("0.1"),
+      mode: 0,
+      bounce: true,
+      body: TokenTransfer{
+        queryId: 0,
+        amount: amount,
+        destination: dst,
+        responseDestination: myAddress(),
+        customPayload: null,
+        forwardTonAmount: ton("0.01"),
+        forwardPayload: emptySlice()
+      }.toCell()
+    });
   }
 
   fun refundToSender(dst: Address, amount: Int) {
