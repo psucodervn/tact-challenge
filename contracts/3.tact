@@ -68,16 +68,11 @@ contract Task3 with Deployable {
   }
 
   receive(msg: TokenNotification) {
-    if (msg.from != self.jettonAddressA && msg.from != self.jettonAddressB) {
-      throw(123);
-    }
-
-    if (sender() == self.owner) {
-      self.updateAmount(msg.from, msg.amount);
-      return;
-    }
-
-    if (msg.from == self.jettonAddressA) {
+    if (sender() == self.jettonAddressA) {
+      if (msg.from == self.owner) {
+        self.updateAmount(self.jettonAddressA, msg.amount);
+        return;
+      }
       let amountOfAJettonToSend: Int = (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
       if (amountOfAJettonToSend <= self.aAmount) {
         self.sendTo(self.jettonAddressA, msg.from, amountOfAJettonToSend);
@@ -86,7 +81,11 @@ contract Task3 with Deployable {
       } else {
         self.refundToSender(msg.from, msg.amount);
       }
-    } else if (msg.from == self.jettonAddressB) {
+    } else if (sender() == self.jettonAddressB) {
+      if (msg.from == self.owner) {
+        self.updateAmount(self.jettonAddressB, msg.amount);
+        return;
+      }
       let amountOfBJettonToSend: Int = (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal;
       if (amountOfBJettonToSend <= self.bAmount) {
         self.sendTo(self.jettonAddressB, msg.from, amountOfBJettonToSend);
@@ -95,6 +94,8 @@ contract Task3 with Deployable {
       } else {
         self.refundToSender(msg.from, msg.amount);
       }
+    } else {
+      throw(123);
     }
   }
 
