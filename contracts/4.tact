@@ -62,12 +62,12 @@ contract Task4 with Deployable {
         to: sender(),
         value: 0,
         bounce: false,
-        mode: 64,
+        mode: 66,
         body: Transfer{
           queryId: msg.queryId,
           newOwner: msg.prevOwner,
           responseDestination: msg.prevOwner,
-          customPayload: emptyCell(),
+          customPayload: null,
           forwardAmount: ton("0.01"),
           forwardPayload: emptySlice()
         }.toCell()
@@ -91,12 +91,12 @@ contract Task4 with Deployable {
     send(SendParameters{
       to: self.nft!!,
       value: 0,
-      mode: 64 + 128 + 32,
+      mode: 64 + 128 + 2,
       body: Transfer{
         queryId: msg.queryId,
         newOwner: sender(),
         responseDestination: sender(),
-        customPayload: emptyCell(),
+        customPayload: null,
         forwardAmount: ton("0.01"),
         forwardPayload: emptySlice()
       }.toCell()
