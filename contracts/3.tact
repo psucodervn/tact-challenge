@@ -77,52 +77,15 @@ contract Task3 with Deployable {
       return;
     }
 
-    // (amountOfJettonAOnContract * decimal / amountOfJettonBOnContract) * amountOfTokenBToSwap / decimal
     if (msg.from == self.jettonAddressA) {
       let amountOfAJettonToSend: Int = (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
       if (amountOfAJettonToSend <= self.aAmount) {
-        self.reply(TokenTransfer{
-          queryId: msg.queryId,
-          amount: amountOfAJettonToSend,
-          destination: sender(),
-          responseDestination: null,
-          customPayload: null,
-          forwardTonAmount: 0,
-          forwardPayload: msg.forwardPayload
-        }.toCell());
       } else {
-        self.reply(TokenTransfer{
-          queryId: msg.queryId,
-          amount: msg.amount,
-          destination: sender(),
-          responseDestination: null,
-          customPayload: null,
-          forwardTonAmount: 0,
-          forwardPayload: msg.forwardPayload
-        }.toCell());
       }
     } else if (msg.from == self.jettonAddressB) {
       let amountOfBJettonToSend: Int = (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal;
       if (amountOfBJettonToSend <= self.bAmount) {
-        self.reply(TokenTransfer{
-          queryId: msg.queryId,
-          amount: amountOfBJettonToSend,
-          destination: sender(),
-          responseDestination: null,
-          customPayload: null,
-          forwardTonAmount: 0,
-          forwardPayload: msg.forwardPayload
-        }.toCell());
       } else {
-        self.reply(TokenTransfer{
-          queryId: msg.queryId,
-          amount: msg.amount,
-          destination: sender(),
-          responseDestination: null,
-          customPayload: null,
-          forwardTonAmount: 0,
-          forwardPayload: msg.forwardPayload
-        }.toCell());
       }
     }
   }
@@ -133,7 +96,7 @@ contract Task3 with Deployable {
     } else if (token == self.jettonAddressB) {
       self.bAmount = self.bAmount + amount;
     } else {
-      throw(1);
+      throw(123);
     }
   }
   
