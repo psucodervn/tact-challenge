@@ -30,7 +30,7 @@ contract Task2 with Deployable {
     send(SendParameters{
       to: msg.sender,
       value: 0,
-      mode: 194
+      mode: 66
     });
   }
 
@@ -39,7 +39,7 @@ contract Task2 with Deployable {
       to: self.admin,
       value: 0,
       body: beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell(),
-      mode: 194
+      mode: 66
     });
   }
 }
