@@ -73,7 +73,7 @@ contract Task3 with Deployable {
         self.updateAmount(self.jettonAddressB, msg.amount);
         return;
       }
-      let amountOfAJettonToSend: Int = (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
+      let amountOfAJettonToSend: Int = (self.aAmount * 1000000000 / self.bAmount) * msg.amount / 1000000000;
       if (amountOfAJettonToSend <= self.aAmount) {
         self.sendTo(self.jettonAddressA, msg.from, amountOfAJettonToSend);
         self.aAmount = self.aAmount - amountOfAJettonToSend;
@@ -86,7 +86,7 @@ contract Task3 with Deployable {
         self.updateAmount(self.jettonAddressA, msg.amount);
         return;
       }
-      let amountOfBJettonToSend: Int = (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal;
+      let amountOfBJettonToSend: Int = (self.bAmount * 1000000000 / self.aAmount) * msg.amount / 1000000000;
       if (amountOfBJettonToSend <= self.bAmount) {
         self.sendTo(self.jettonAddressB, msg.from, amountOfBJettonToSend);
         self.bAmount = self.bAmount - amountOfBJettonToSend;
@@ -147,9 +147,9 @@ contract Task3 with Deployable {
   
   get fun price(jetton: Address): Int {
     if (jetton == self.jettonAddressB) {
-    return self.aAmount * self.decimal / self.bAmount;
+    return self.aAmount * 1000000000 / self.bAmount;
     } else {
-      return self.bAmount * self.decimal / self.aAmount;
+      return self.bAmount * 1000000000 / self.aAmount;
     }
   }
   
