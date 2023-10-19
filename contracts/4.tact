@@ -63,7 +63,7 @@ contract Task4 with Deployable {
         value: 0,
         mode: 64,
         body: Transfer{
-          queryId: msg.queryId,
+          queryId: 0,
           newOwner: msg.prevOwner,
           responseDestination: msg.prevOwner,
           customPayload: null,
@@ -89,11 +89,11 @@ contract Task4 with Deployable {
     }
 
     send(SendParameters{
-      to: self.nft!!,
+      to: msg.nftAddress,
       value: 0,
       mode: 64,
       body: Transfer{
-        queryId: msg.queryId,
+        queryId: 0,
         newOwner: sender,
         responseDestination: sender,
         customPayload: null,
