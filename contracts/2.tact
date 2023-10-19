@@ -32,6 +32,8 @@ contract Task2 with Deployable {
         value: 0,
         mode: 66
       });
+    } else {
+      throw(123);
     }
   }
 
