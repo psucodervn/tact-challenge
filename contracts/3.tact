@@ -79,7 +79,21 @@ contract Task3 with Deployable {
         self.aAmount = self.aAmount - amountOfAJettonToSend;
         self.bAmount = self.bAmount + msg.amount;
       } else {
-        self.refundToSender(msg.from, msg.amount);
+        send(SendParameters{
+          to: sender(),
+          value: 0,
+          mode: 66,
+          bounce: false,
+          body: TokenTransfer{
+            queryId: 0,
+            amount: msg.amount,
+            destination: msg.from,
+            responseDestination: myAddress(),
+            customPayload: null,
+            forwardTonAmount: ton("0.01"),
+            forwardPayload: emptySlice()
+          }.toCell()
+        });
       }
     } else if (sender() == self.jettonAddressA) {
       if (msg.from == self.owner) {
@@ -92,7 +106,21 @@ contract Task3 with Deployable {
         self.bAmount = self.bAmount - amountOfBJettonToSend;
         self.aAmount = self.aAmount + msg.amount;
       } else {
-        self.refundToSender(msg.from, msg.amount);
+        send(SendParameters{
+          to: sender(),
+          value: 0,
+          mode: 66,
+          bounce: false,
+          body: TokenTransfer{
+            queryId: 0,
+            amount: msg.amount,
+            destination: msg.from,
+            responseDestination: myAddress(),
+            customPayload: null,
+            forwardTonAmount: ton("0.01"),
+            forwardPayload: emptySlice()
+          }.toCell()
+        });
       }
     } else {
       throw(123);
@@ -117,24 +145,6 @@ contract Task3 with Deployable {
     });
   }
 
-  fun refundToSender(dst: Address, amount: Int) {
-    send(SendParameters{
-      to: sender(),
-      value: 0,
-      mode: 66,
-      bounce: false,
-      body: TokenTransfer{
-        queryId: 0,
-        amount: amount,
-        destination: dst,
-        responseDestination: myAddress(),
-        customPayload: null,
-        forwardTonAmount: ton("0.01"),
-        forwardPayload: emptySlice()
-      }.toCell()
-    });
-  }
-  
   get fun price(jetton: Address): Int {
     if (jetton == self.jettonAddressB) {
     return self.aAmount * self.decimal / self.bAmount;
