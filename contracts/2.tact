@@ -26,15 +26,15 @@ contract Task2 with Deployable {
   }
   
   receive(msg: Refund) {
-    if (sender() == self.admin) {
-      send(SendParameters{
-        to: msg.sender,
-        value: 0,
-        mode: 66
-      });
-    } else {
+    if (sender() != self.admin) {
       throw(123);
     }
+
+    send(SendParameters{
+      to: msg.sender,
+      value: 0,
+      mode: 64
+    });
   }
 
   receive(msg: Slice) {
@@ -42,7 +42,7 @@ contract Task2 with Deployable {
       to: self.admin,
       value: 0,
       body: beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell(),
-      mode: 66
+      mode: 64
     });
   }
 }
