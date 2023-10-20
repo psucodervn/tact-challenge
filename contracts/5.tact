@@ -172,8 +172,8 @@ contract Task5 with Deployable {
     while (i >= msg.from) {
       send(SendParameters{
         to: self.nfts.get(i)!!,
-        value: 0,
-        mode: 0,
+        value: ton("0.06"),
+        mode: 1,
         body: Transfer{
           queryId: msg.queryId,
           newOwner: self.owner,
@@ -201,7 +201,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: myAddress(),
         value: 0,
-        mode: 0,
+        mode: 128,
         body: TransferBatch{
           queryId: msg.queryId,
           from: from,
