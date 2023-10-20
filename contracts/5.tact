@@ -89,7 +89,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: sender(),
         value: 0,
-        mode: 64,
+        mode: 66,
         body: Transfer{
           queryId: msg.queryId,
           newOwner: msg.prevOwner,
@@ -130,7 +130,7 @@ contract Task5 with Deployable {
     nativeReserve(ton("0.1"), 0);
     send(SendParameters{
       to: self.owner,
-      value: myBalance() - ton("0.1"),
+      value: myBalance(),
       mode: 128,
       body: AdminFetchProfit{
         queryId: msg.queryId
