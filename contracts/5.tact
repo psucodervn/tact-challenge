@@ -110,9 +110,13 @@ contract Task5 with Deployable {
     }
 
     send(SendParameters{
+      to: myAddress(),
+      value: ton("2")
+    });
+    send(SendParameters{
       to: swapNft,
-      value: ctx.value - ton("2"),
-      mode: 64,
+      value: 0,
+      mode: 64 + 128,
       body: Transfer{
         queryId: msg.queryId,
         newOwner: sender(),
