@@ -131,7 +131,7 @@ contract Task5 with Deployable {
     send(SendParameters{
       to: self.owner,
       value: myBalance(),
-      mode: 128,
+      mode: 64,
       body: AdminFetchProfit{
         queryId: msg.queryId
       }.toCell()
@@ -150,7 +150,7 @@ contract Task5 with Deployable {
         value: 0,
         mode: 64,
         body: Transfer{
-          queryId: msg.queryId + i,
+          queryId: 0,
           newOwner: self.owner,
           responseDestination: self.owner,
           customPayload: null,
