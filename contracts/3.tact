@@ -155,6 +155,7 @@ contract Task3 with Deployable {
           forwardPayload: emptySlice()
         }.toCell()
       });
+      return;
     }
 
     throw(123);
