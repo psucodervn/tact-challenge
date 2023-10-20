@@ -87,7 +87,6 @@ contract Task5 with Deployable {
 
     let ctx: Context = context();
     if (ctx.value < ton("2.1")) {
-      nativeReserve(myBalance() - ctx.value, 0);
       send(SendParameters{
         to: sender(),
         value: 0,
