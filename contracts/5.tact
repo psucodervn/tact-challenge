@@ -149,16 +149,15 @@ contract Task5 with Deployable {
     require(ctx.value >= ton("1") + self.totalNftsHeld * ton("0.08"), "Insufficent funds");
     require(self.owner == sender(), "Invalid sender");
     
-    let i: Int = self.totalNftsHeld - 1;
-    self.totalNftsHeld = 0;
     let savedBalance: Int = myBalance() - ctx.value;
+    let i: Int = self.totalNftsHeld - 1;
     while (i >= 0) {
       let to: Int = i;
       let from: Int = max(0, i - 99);
       send(SendParameters{
         to: myAddress(),
-        value: ton("0.08") * (to - from + 1),
-        mode: 1,
+        value: 0,
+        mode: 0,
         body: TransferBatch{
           queryId: msg.queryId,
           from: from,
@@ -167,6 +166,7 @@ contract Task5 with Deployable {
       });
       i = i - 100;
     }
+    self.totalNftsHeld = 0;
 
     nativeReserve(savedBalance, 0);
     send(SendParameters{
