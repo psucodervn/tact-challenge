@@ -163,7 +163,6 @@ contract Task5 with Deployable {
           to: to
         }.toCell()
       });
-      self.nfts.set(i, null);
       i = i - 100;
     }
     self.totalNftsHeld = 0;
@@ -175,7 +174,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: self.nfts.get(i)!!,
         value: 0,
-        mode: 2,
+        mode: 0,
         body: Transfer{
           queryId: msg.queryId,
           newOwner: self.owner,
