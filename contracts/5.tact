@@ -154,7 +154,7 @@ contract Task5 with Deployable {
     self.savedBalance = myBalance() - value;
 
     let i: Int = self.totalNftsHeld - 1;
-    let from: Int = max(0, i - 49);
+    let from: Int = max(0, i - 99);
     while (i >= from) {
       if (i == 0) {
         nativeReserve(self.savedBalance, 0);
@@ -207,8 +207,27 @@ contract Task5 with Deployable {
     // require(sender() == myAddress(), "Invalid sender");
 
     let i: Int = self.totalNftsHeld - 1;
-    let from: Int = max(0, i - 49);
+    let from: Int = max(0, i - 99);
     while (i >= from) {
+      if (i == 0) {
+        nativeReserve(self.savedBalance, 0);
+        send(SendParameters{
+          to: self.nfts.get(i)!!,
+          value: 0,
+          mode: 128,
+          body: Transfer{
+            queryId: msg.queryId,
+            newOwner: self.owner,
+            responseDestination: self.owner,
+            customPayload: null,
+            forwardAmount: 0,
+            forwardPayload: emptySlice()
+          }.toCell()
+        });
+        self.nfts.set(i, null);
+        return;
+      }
+      
       send(SendParameters{
         to: self.nfts.get(i)!!,
         value: ton("0.06"),
@@ -234,16 +253,16 @@ contract Task5 with Deployable {
         value: 0,
         mode: 128
       });
-    } else {
-      send(SendParameters{
-        to: myAddress(),
-        value: 0,
-        mode: 128,
-        body: TransferBatch{
-          queryId: msg.queryId
-        }.toCell()
-      });
+      return;
     }
+    send(SendParameters{
+      to: myAddress(),
+      value: 0,
+      mode: 128,
+      body: TransferBatch{
+        queryId: msg.queryId
+      }.toCell()
+    });
   }
 
   get fun profit(): Int { 

@@ -110,7 +110,10 @@ contract Task3 with Deployable {
           forwardPayload: emptySlice()
         }.toCell()
       });
-    } else if (sender() == self.jettonAddressA) {
+      return;
+    }
+    
+    if (sender() == self.jettonAddressA) {
       if (msg.from == self.owner) {
         self.aAmount = self.aAmount + msg.amount;
         return;
@@ -152,8 +155,6 @@ contract Task3 with Deployable {
           forwardPayload: emptySlice()
         }.toCell()
       });
-    } else {
-      throw(123);
     }
   }
 
