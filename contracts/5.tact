@@ -112,9 +112,13 @@ contract Task5 with Deployable {
     }
 
     send(SendParameters{
+      to: myAddress(),
+      value: ton("2")
+    });
+    send(SendParameters{
       to: swapNft,
-      value: ctx.value - ton("2"),
-      mode: 64,
+      value: ctx.value,
+      mode: 128,
       body: Transfer{
         queryId: msg.queryId,
         newOwner: sender(),
@@ -132,8 +136,8 @@ contract Task5 with Deployable {
     nativeReserve(ton("0.1"), 0);
     send(SendParameters{
       to: self.owner,
-      value: myBalance(),
-      mode: 64,
+      value: myBalance() - ton("0.1"),
+      mode: 128,
       body: AdminFetchProfit{
         queryId: msg.queryId
       }.toCell()
