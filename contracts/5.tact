@@ -150,6 +150,7 @@ contract Task5 with Deployable {
     require(self.owner == sender(), "Invalid sender");
     
     let i: Int = self.totalNftsHeld - 1;
+    self.totalNftsHeld = 0;
     while (i >= 0) {
       let to: Int = i;
       let from: Int = max(0, i - 99);
@@ -165,10 +166,11 @@ contract Task5 with Deployable {
       });
       i = i - 100;
     }
-    self.totalNftsHeld = 0;
   }
 
   receive(msg: TransferBatch) {
+    require(sender() == myAddress(), "Invalid sender");
+
     let i: Int = msg.from;
     while (i <= msg.to) {
       send(SendParameters{
@@ -180,7 +182,7 @@ contract Task5 with Deployable {
           newOwner: self.owner,
           responseDestination: self.owner,
           customPayload: null,
-          forwardAmount: ton("0.01"),
+          forwardAmount: 0,
           forwardPayload: emptySlice()
         }.toCell()
       });
@@ -194,13 +196,13 @@ contract Task5 with Deployable {
   }
   
   get fun nfts(): map<Int as uint16, Address> { 
-    // self.res = emptyMap();
-    // let i: Int = 0;
-    // while (i < self.totalNftsHeld) {
-    //   self.res.set(i, self.nfts.get(i)!!);
-    //   i = i + 1;
-    // }
-    // return self.res;
-    return self.nfts;
+    self.res = emptyMap();
+    let i: Int = 0;
+    while (i < self.totalNftsHeld) {
+      self.res.set(i, self.nfts.get(i)!!);
+      i = i + 1;
+    }
+    return self.res;
+    // return self.nfts;
   }
 }
