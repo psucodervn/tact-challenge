@@ -109,17 +109,16 @@ contract Task5 with Deployable {
       self.nfts.set(randomNftIndex, sender());
     }
 
-    nativeReserve(myBalance() - ctx.value + ton("2"), 0);
     send(SendParameters{
       to: swapNft,
-      value: myBalance(),
+      value: ctx.value - ton("2"),
       mode: 64,
       body: Transfer{
         queryId: msg.queryId,
         newOwner: sender(),
         responseDestination: sender(),
         customPayload: null,
-        forwardAmount: myBalance(),
+        forwardAmount: 0,
         forwardPayload: emptySlice()
       }.toCell()
     });
