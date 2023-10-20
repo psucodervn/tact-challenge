@@ -156,6 +156,8 @@ contract Task3 with Deployable {
         }.toCell()
       });
     }
+
+    throw(123);
   }
 
   get fun price(jetton: Address): Int {

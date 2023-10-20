@@ -155,40 +155,34 @@ contract Task5 with Deployable {
 
     let i: Int = self.totalNftsHeld - 1;
     let from: Int = max(0, i - 99);
+    let params: SendParameters = SendParameters{
+      to: self.owner,
+      value: ton("0.06"),
+      mode: 1,
+      body: Transfer{
+        queryId: msg.queryId,
+        newOwner: self.owner,
+        responseDestination: self.owner,
+        customPayload: null,
+        forwardAmount: 0,
+        forwardPayload: emptySlice()
+      }.toCell()
+    };
+
     while (i >= from) {
+      params.to = self.nfts.get(i)!!;
+      self.nfts.set(i, null);
+
       if (i == 0) {
         nativeReserve(self.savedBalance, 0);
-        send(SendParameters{
-          to: self.nfts.get(i)!!,
-          value: 0,
-          mode: 128,
-          body: Transfer{
-            queryId: msg.queryId,
-            newOwner: self.owner,
-            responseDestination: self.owner,
-            customPayload: null,
-            forwardAmount: 0,
-            forwardPayload: emptySlice()
-          }.toCell()
-        });
-        self.nfts.set(i, null);
+        params.value = 0;
+        params.mode = 128;
+        send(params);
+        self.totalNftsHeld = 0;
         return;
       }
 
-      send(SendParameters{
-        to: self.nfts.get(i)!!,
-        value: ton("0.06"),
-        mode: 1,
-        body: Transfer{
-          queryId: msg.queryId,
-          newOwner: self.owner,
-          responseDestination: self.owner,
-          customPayload: null,
-          forwardAmount: 0,
-          forwardPayload: emptySlice()
-        }.toCell()
-      });
-      self.nfts.set(i, null);
+      send(params);
       i = i - 1;
     }
 
@@ -197,6 +191,7 @@ contract Task5 with Deployable {
       to: myAddress(),
       value: 0,
       mode: 128,
+      bounce: false,
       body: TransferBatch{
         queryId: msg.queryId
       }.toCell()
@@ -208,40 +203,34 @@ contract Task5 with Deployable {
 
     let i: Int = self.totalNftsHeld - 1;
     let from: Int = max(0, i - 99);
+    let params: SendParameters = SendParameters{
+      to: self.owner,
+      value: ton("0.06"),
+      mode: 1,
+      body: Transfer{
+        queryId: msg.queryId,
+        newOwner: self.owner,
+        responseDestination: self.owner,
+        customPayload: null,
+        forwardAmount: 0,
+        forwardPayload: emptySlice()
+      }.toCell()
+    };
+
     while (i >= from) {
+      params.to = self.nfts.get(i)!!;
+      self.nfts.set(i, null);
+
       if (i == 0) {
         nativeReserve(self.savedBalance, 0);
-        send(SendParameters{
-          to: self.nfts.get(i)!!,
-          value: 0,
-          mode: 128,
-          body: Transfer{
-            queryId: msg.queryId,
-            newOwner: self.owner,
-            responseDestination: self.owner,
-            customPayload: null,
-            forwardAmount: 0,
-            forwardPayload: emptySlice()
-          }.toCell()
-        });
-        self.nfts.set(i, null);
+        params.value = 0;
+        params.mode = 128;
+        send(params);
+        self.totalNftsHeld = 0;
         return;
       }
-      
-      send(SendParameters{
-        to: self.nfts.get(i)!!,
-        value: ton("0.06"),
-        mode: 1,
-        body: Transfer{
-          queryId: msg.queryId,
-          newOwner: self.owner,
-          responseDestination: self.owner,
-          customPayload: null,
-          forwardAmount: 0,
-          forwardPayload: emptySlice()
-        }.toCell()
-      });
-      self.nfts.set(i, null);
+
+      send(params);
       i = i - 1;
     }
 
@@ -259,6 +248,7 @@ contract Task5 with Deployable {
       to: myAddress(),
       value: 0,
       mode: 128,
+      bounce: false,
       body: TransferBatch{
         queryId: msg.queryId
       }.toCell()
