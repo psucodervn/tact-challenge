@@ -151,13 +151,14 @@ contract Task5 with Deployable {
     
     let i: Int = self.totalNftsHeld - 1;
     self.totalNftsHeld = 0;
+    let savedBalance: Int = myBalance() - ctx.value;
     while (i >= 0) {
       let to: Int = i;
       let from: Int = max(0, i - 99);
       send(SendParameters{
         to: myAddress(),
         value: ton("0.08") * (to - from + 1),
-        mode: 0,
+        mode: 1,
         body: TransferBatch{
           queryId: msg.queryId,
           from: from,
@@ -167,6 +168,7 @@ contract Task5 with Deployable {
       i = i - 100;
     }
 
+    nativeReserve(savedBalance, 0);
     send(SendParameters{
       to: self.owner,
       value: myBalance(),
