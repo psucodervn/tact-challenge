@@ -134,8 +134,8 @@ contract Task5 with Deployable {
     nativeReserve(ton("0.1"), 0);
     send(SendParameters{
       to: self.owner,
-      value: myBalance(),
-      mode: 128,
+      value: 0,
+      mode: 192,
       body: AdminFetchProfit{
         queryId: msg.queryId
       }.toCell()
@@ -174,8 +174,8 @@ contract Task5 with Deployable {
       nativeReserve(self.savedBalance, 0);
       send(SendParameters{
         to: self.owner,
-        value: myBalance(),
-        mode: 128
+        value: 0,
+        mode: 192
       });
     } else {
       send(SendParameters{
@@ -228,8 +228,8 @@ contract Task5 with Deployable {
       nativeReserve(self.savedBalance, 0);
       send(SendParameters{
         to: self.owner,
-        value: myBalance(),
-        mode: 128
+        value: 0,
+        mode: 192
       });
     } else {
       send(SendParameters{
