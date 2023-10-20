@@ -150,7 +150,7 @@ contract Task5 with Deployable {
         value: 0,
         mode: 64,
         body: Transfer{
-          queryId: 0,
+          queryId: msg.queryId + i,
           newOwner: self.owner,
           responseDestination: self.owner,
           customPayload: null,
