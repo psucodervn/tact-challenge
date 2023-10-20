@@ -129,8 +129,8 @@ contract Task5 with Deployable {
     nativeReserve(ton("0.1"), 0);
     send(SendParameters{
       to: self.owner,
-      value: 0,
-      mode: 192,
+      value: myBalance() - ton("0.1"),
+      mode: 128,
       body: AdminFetchProfit{
         queryId: msg.queryId
       }.toCell()
