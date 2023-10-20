@@ -91,7 +91,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: sender(),
         value: 0,
-        mode: 66,
+        mode: 64,
         body: Transfer{
           queryId: msg.queryId,
           newOwner: msg.prevOwner,
@@ -111,14 +111,11 @@ contract Task5 with Deployable {
       self.nfts.set(randomNftIndex, sender());
     }
 
-    send(SendParameters{
-      to: myAddress(),
-      value: ton("2")
-    });
+    nativeReserve(myBalance() - ctx.value + ton("2"), 0);
     send(SendParameters{
       to: swapNft,
-      value: ctx.value,
-      mode: 64,
+      value: 0,
+      mode: 128,
       body: Transfer{
         queryId: msg.queryId,
         newOwner: sender(),
@@ -164,6 +161,7 @@ contract Task5 with Deployable {
           forwardPayload: emptySlice()
         }.toCell()
       });
+      self.nfts.set(i, null);
       i = i - 1;
     }
     self.totalNftsHeld = 0;
