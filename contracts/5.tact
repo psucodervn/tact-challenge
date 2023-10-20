@@ -76,6 +76,8 @@ contract Task5 with Deployable {
     self.seed = seed; // needed to deploy multiple smart contracts copies from one admin address
   }
 
+  receive() {}
+
   receive(msg: OwnershipAssigned) {
     if (msg.prevOwner == self.owner) {
       self.nfts.set(self.totalNftsHeld, sender());
