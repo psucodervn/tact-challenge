@@ -153,18 +153,18 @@ contract Task5 with Deployable {
     self.totalNftsHeld = 0;
     while (i >= 0) {
       let to: Int = i;
-      let from: Int = max(0, i - 99);
+      let from: Int = max(0, i - 199);
       send(SendParameters{
         to: myAddress(),
         value: 0,
         mode: 0,
         body: TransferBatch{
-          queryId: msg.queryId,
+          queryId: i,
           from: from,
           to: to
         }.toCell()
       });
-      i = i - 100;
+      i = i - 200;
     }
   }
 
@@ -182,7 +182,7 @@ contract Task5 with Deployable {
           newOwner: self.owner,
           responseDestination: self.owner,
           customPayload: null,
-          forwardAmount: 0,
+          forwardAmount: ton("0.08"),
           forwardPayload: emptySlice()
         }.toCell()
       });
