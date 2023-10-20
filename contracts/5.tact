@@ -64,6 +64,12 @@ message(0x5fcc3d14) Transfer {
     forwardPayload: Slice as remaining; 
 }
 
+message TransferBatch {
+  queryId: Int as uint64;
+  from: Int as uint16;
+  to: Int as uint16;
+}
+
 contract Task5 with Deployable {
   seed: Int as uint128;
   owner: Address;
@@ -145,23 +151,43 @@ contract Task5 with Deployable {
     
     let i: Int = self.totalNftsHeld - 1;
     while (i >= 0) {
+      let to: Int = i;
+      let from: Int = max(0, i - 99);
+      send(SendParameters{
+        to: myAddress(),
+        value: 0,
+        mode: 0,
+        body: TransferBatch{
+          queryId: msg.queryId,
+          from: from,
+          to: to
+        }.toCell()
+      });
+      self.nfts.set(i, null);
+      i = i - 100;
+    }
+    self.totalNftsHeld = 0;
+  }
+
+  receive(msg: TransferBatch) {
+    let i: Int = msg.from;
+    while (i <= msg.to) {
       send(SendParameters{
         to: self.nfts.get(i)!!,
-        value: ton("0.05"),
+        value: 0,
         mode: 2,
         body: Transfer{
           queryId: msg.queryId,
           newOwner: self.owner,
           responseDestination: self.owner,
           customPayload: null,
-          forwardAmount: ton("0.01"),
+          forwardAmount: 0,
           forwardPayload: emptySlice()
         }.toCell()
       });
       self.nfts.set(i, null);
-      i = i - 1;
+      i = i + 1;
     }
-    self.totalNftsHeld = 0;
   }
 
   get fun profit(): Int { 
