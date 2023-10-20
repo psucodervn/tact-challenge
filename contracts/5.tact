@@ -171,8 +171,8 @@ contract Task5 with Deployable {
     nativeReserve(savedBalance, 0);
     send(SendParameters{
       to: self.owner,
-      value: myBalance(),
-      mode: 128
+      value: 0,
+      mode: 64
     });
   }
 
