@@ -68,6 +68,10 @@ message TransferBatch {
   queryId: Int as uint64;
 }
 
+const FEE: Int = ton("2");
+const FEE_VALUE: Int = ton("2.1");
+const RESERVED: Int = ton("0.1");
+
 contract Task5 with Deployable {
   seed: Int as uint128;
   owner: Address;
@@ -88,12 +92,11 @@ contract Task5 with Deployable {
     }
 
     let value: Int = context().value;
-    if (value < ton("2.1")) {
+    if (value < FEE_VALUE) {
       send(SendParameters{
         to: sender(),
         value: 0,
         mode: 64,
-        bounce: false,
         body: Transfer{
           queryId: msg.queryId,
           newOwner: msg.prevOwner,
@@ -113,12 +116,11 @@ contract Task5 with Deployable {
       self.nfts.set(randomNftIndex, sender());
     }
 
-    nativeReserve(myBalance() - value + ton("2"), 0);
+    nativeReserve(myBalance() - value + FEE, 0);
     send(SendParameters{
       to: swapNft,
       value: 0,
       mode: 128,
-      bounce: false,
       body: Transfer{
         queryId: msg.queryId,
         newOwner: msg.prevOwner,
@@ -133,12 +135,11 @@ contract Task5 with Deployable {
   receive(msg: AdminWithdrawalProfit) {
     require(self.owner == sender(), "Insufficient privelegies");
 
-    nativeReserve(ton("0.1"), 0);
+    nativeReserve(RESERVED, 0);
     send(SendParameters{
       to: self.owner,
       value: 0,
       mode: 128,
-      bounce: false,
       body: AdminFetchProfit{
         queryId: msg.queryId
       }.toCell()
@@ -159,7 +160,6 @@ contract Task5 with Deployable {
         to: self.nfts.get(i)!!,
         value: ton("0.06"),
         mode: 1,
-        bounce: false,
         body: Transfer{
           queryId: msg.queryId,
           newOwner: self.owner,
@@ -179,7 +179,6 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: self.owner,
         value: 0,
-        bounce: false,
         mode: 128
       });
     } else {
@@ -187,7 +186,6 @@ contract Task5 with Deployable {
         to: myAddress(),
         value: 0,
         mode: 128,
-        bounce: false,
         body: TransferBatch{
           queryId: msg.queryId
         }.toCell()
@@ -205,7 +203,6 @@ contract Task5 with Deployable {
         to: self.nfts.get(i)!!,
         value: ton("0.06"),
         mode: 1,
-        bounce: false,
         body: Transfer{
           queryId: msg.queryId,
           newOwner: self.owner,
@@ -225,7 +222,6 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: self.owner,
         value: 0,
-        bounce: false,
         mode: 128
       });
     } else {
@@ -233,7 +229,6 @@ contract Task5 with Deployable {
         to: myAddress(),
         value: 0,
         mode: 128,
-        bounce: false,
         body: TransferBatch{
           queryId: msg.queryId
         }.toCell()
@@ -242,7 +237,7 @@ contract Task5 with Deployable {
   }
 
   get fun profit(): Int { 
-    return myBalance() - ton("0.1");
+    return myBalance() - RESERVED;
   }
   
   get fun nfts(): map<Int as uint16, Address> {
