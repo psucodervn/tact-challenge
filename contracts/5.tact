@@ -76,6 +76,7 @@ contract Task5 with Deployable {
   nfts: map<Int as uint16, Address>;
   res: map<Int as uint16, Address>;
   totalNftsHeld: Int as uint16 = 0;
+  savedBalance: Int = 0;
   
   init(seed: Int, owner: Address) {
     self.owner = owner;
@@ -149,38 +150,26 @@ contract Task5 with Deployable {
     require(ctx.value >= ton("1") + self.totalNftsHeld * ton("0.08"), "Insufficent funds");
     require(self.owner == sender(), "Invalid sender");
     
-    let savedBalance: Int = myBalance() - ctx.value;
-    let i: Int = self.totalNftsHeld - 1;
-    while (i >= 0) {
-      let to: Int = i;
-      let from: Int = max(0, i - 99);
-      send(SendParameters{
-        to: myAddress(),
-        value: 0,
-        mode: 0,
-        body: TransferBatch{
-          queryId: msg.queryId,
-          from: from,
-          to: to
-        }.toCell()
-      });
-      i = i - 100;
-    }
-    self.totalNftsHeld = 0;
-
-    nativeReserve(savedBalance, 0);
+    self.savedBalance = myBalance() - ctx.value;
+    let to: Int = self.totalNftsHeld - 1;
+    let from: Int = max(0, to - 99);
     send(SendParameters{
-      to: self.owner,
+      to: myAddress(),
       value: 0,
-      mode: 64
+      mode: 64,
+      body: TransferBatch{
+        queryId: msg.queryId,
+        from: from,
+        to: to
+      }.toCell()
     });
   }
 
   receive(msg: TransferBatch) {
     require(sender() == myAddress(), "Invalid sender");
 
-    let i: Int = msg.from;
-    while (i <= msg.to) {
+    let i: Int = msg.to;
+    while (i >= msg.from) {
       send(SendParameters{
         to: self.nfts.get(i)!!,
         value: 0,
@@ -195,7 +184,30 @@ contract Task5 with Deployable {
         }.toCell()
       });
       self.nfts.set(i, null);
-      i = i + 1;
+      i = i - 1;
+    }
+
+    self.totalNftsHeld = msg.from;
+    if (self.totalNftsHeld == 0) {
+      nativeReserve(self.savedBalance, 0);
+      send(SendParameters{
+        to: self.owner,
+        value: myBalance(),
+        mode: 128
+      });
+    } else {
+      let to: Int = self.totalNftsHeld - 1;
+      let from: Int = max(0, to - 99);
+      send(SendParameters{
+        to: myAddress(),
+        value: 0,
+        mode: 0,
+        body: TransferBatch{
+          queryId: msg.queryId,
+          from: from,
+          to: to
+        }.toCell()
+      });
     }
   }
 
