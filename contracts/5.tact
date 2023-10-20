@@ -166,10 +166,12 @@ contract Task5 with Deployable {
       });
       i = i - 50;
     }
+
+    nativeReserve(ton("0.1"), 0);
     send(SendParameters{
       to: self.owner,
-      value: 0,
-      mode: 64 + 128
+      value: myBalance(),
+      mode: 128
     });
   }
 
@@ -187,7 +189,7 @@ contract Task5 with Deployable {
           newOwner: self.owner,
           responseDestination: self.owner,
           customPayload: null,
-          forwardAmount: ton("0.08"),
+          forwardAmount: ton("0.01"),
           forwardPayload: emptySlice()
         }.toCell()
       });
