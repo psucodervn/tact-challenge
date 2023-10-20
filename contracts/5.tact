@@ -66,8 +66,6 @@ message(0x5fcc3d14) Transfer {
 
 message TransferBatch {
   queryId: Int as uint64;
-  from: Int as uint16;
-  to: Int as uint16;
 }
 
 contract Task5 with Deployable {
@@ -158,9 +156,7 @@ contract Task5 with Deployable {
       value: 0,
       mode: 64,
       body: TransferBatch{
-        queryId: msg.queryId,
-        from: from,
-        to: to
+        queryId: msg.queryId
       }.toCell()
     });
   }
@@ -168,8 +164,9 @@ contract Task5 with Deployable {
   receive(msg: TransferBatch) {
     require(sender() == myAddress(), "Invalid sender");
 
-    let i: Int = msg.to;
-    while (i >= msg.from) {
+    let i: Int = self.totalNftsHeld - 1;
+    let from: Int = max(0, i - 99);
+    while (i >= from) {
       send(SendParameters{
         to: self.nfts.get(i)!!,
         value: ton("0.06"),
@@ -187,7 +184,7 @@ contract Task5 with Deployable {
       i = i - 1;
     }
 
-    self.totalNftsHeld = msg.from;
+    self.totalNftsHeld = from;
     if (self.totalNftsHeld == 0) {
       nativeReserve(self.savedBalance, 0);
       send(SendParameters{
@@ -196,16 +193,12 @@ contract Task5 with Deployable {
         mode: 128
       });
     } else {
-      let to: Int = self.totalNftsHeld - 1;
-      let from: Int = max(0, to - 99);
       send(SendParameters{
         to: myAddress(),
         value: 0,
         mode: 128,
         body: TransferBatch{
-          queryId: msg.queryId,
-          from: from,
-          to: to
+          queryId: msg.queryId
         }.toCell()
       });
     }
@@ -216,13 +209,13 @@ contract Task5 with Deployable {
   }
   
   get fun nfts(): map<Int as uint16, Address> { 
-    self.res = emptyMap();
-    let i: Int = 0;
-    while (i < self.totalNftsHeld) {
-      self.res.set(i, self.nfts.get(i)!!);
-      i = i + 1;
-    }
-    return self.res;
-    // return self.nfts;
+    // self.res = emptyMap();
+    // let i: Int = 0;
+    // while (i < self.totalNftsHeld) {
+    //   self.res.set(i, self.nfts.get(i)!!);
+    //   i = i + 1;
+    // }
+    // return self.res;
+    return self.nfts;
   }
 }
