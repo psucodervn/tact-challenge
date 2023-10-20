@@ -48,12 +48,14 @@ message NftWithdrawal {
 
 contract Task4 with Deployable {
   seed: Int as uint128;
-  nft: Address? = null;
-  owner: Address? = null;
+  nft: Address;
+  owner: Address;
   unlockedAt: Int as uint32 = 0;
   
   init(seed: Int) {
     self.seed = seed; // needed to deploy multiple smart contracts copies from one admin address
+    self.nft = sender();
+    self.owner = sender();
   }
 
   receive(msg: OwnershipAssigned) {
@@ -102,8 +104,8 @@ contract Task4 with Deployable {
       }.toCell()
     });
 
-    self.owner = null;
-    self.nft = null;
+    // self.owner = null;
+    // self.nft = null;
     self.unlockedAt = 0;
   }
 
@@ -112,10 +114,16 @@ contract Task4 with Deployable {
   }
 
   get fun nft(): Address? {
-    return self.nft;
+    if (self.unlockedAt > 0) {
+      return self.nft;
+    }
+    return null;
   }
 
   get fun owner(): Address? {
-    return self.owner;
+    if (self.unlockedAt > 0) {
+      return self.owner;
+    }
+    return null;
   }
 }
