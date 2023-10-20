@@ -148,7 +148,7 @@ contract Task5 with Deployable {
     let i: Int = self.totalNftsHeld - 1;
     while (i >= 0) {
       send(SendParameters{
-        to: self.owner,
+        to: self.nfts.get(i)!!,
         value: 0,
         mode: 0,
         body: Transfer{
