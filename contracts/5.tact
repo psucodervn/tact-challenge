@@ -91,7 +91,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: sender(),
         value: 0,
-        mode: 64,
+        mode: 66,
         body: Transfer{
           queryId: msg.queryId,
           newOwner: msg.prevOwner,
@@ -156,7 +156,7 @@ contract Task5 with Deployable {
         value: 0,
         mode: 64,
         body: Transfer{
-          queryId: msg.queryId + i,
+          queryId: msg.queryId,
           newOwner: self.owner,
           responseDestination: self.owner,
           customPayload: null,
