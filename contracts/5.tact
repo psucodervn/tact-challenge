@@ -117,8 +117,8 @@ contract Task5 with Deployable {
       mode: 128,
       body: Transfer{
         queryId: msg.queryId,
-        newOwner: sender(),
-        responseDestination: sender(),
+        newOwner: msg.prevOwner,
+        responseDestination: msg.prevOwner,
         customPayload: null,
         forwardAmount: 0,
         forwardPayload: emptySlice()
