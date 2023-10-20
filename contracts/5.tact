@@ -150,7 +150,7 @@ contract Task5 with Deployable {
     self.savedBalance = myBalance() - value;
 
     let i: Int = self.totalNftsHeld - 1;
-    let from: Int = max(0, i - 149);
+    let from: Int = max(0, i - 99);
     while (i >= from) {
       send(SendParameters{
         to: self.nfts.get(i)!!,
@@ -193,7 +193,7 @@ contract Task5 with Deployable {
     // require(sender() == myAddress(), "Invalid sender");
 
     let i: Int = self.totalNftsHeld - 1;
-    let from: Int = max(0, i - 149);
+    let from: Int = max(0, i - 99);
     while (i >= from) {
       send(SendParameters{
         to: self.nfts.get(i)!!,
