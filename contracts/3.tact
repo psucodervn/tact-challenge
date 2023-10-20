@@ -93,23 +93,23 @@ contract Task3 with Deployable {
         });
         self.aAmount = self.aAmount - amountOfAJettonToSend;
         self.bAmount = self.bAmount + msg.amount;
-      } else {
-        send(SendParameters{
-          to: sender(),
-          value: 0,
-          mode: 64,
-          bounce: false,
-          body: TokenTransfer{
-            queryId: 0,
-            amount: msg.amount,
-            destination: msg.from,
-            responseDestination: myAddress(),
-            customPayload: null,
-            forwardTonAmount: ton("0.01"),
-            forwardPayload: emptySlice()
-          }.toCell()
-        });
+        return;
       }
+      send(SendParameters{
+        to: sender(),
+        value: 0,
+        mode: 64,
+        bounce: false,
+        body: TokenTransfer{
+          queryId: 0,
+          amount: msg.amount,
+          destination: msg.from,
+          responseDestination: myAddress(),
+          customPayload: null,
+          forwardTonAmount: ton("0.01"),
+          forwardPayload: emptySlice()
+        }.toCell()
+      });
     } else if (sender() == self.jettonAddressA) {
       if (msg.from == self.owner) {
         self.aAmount = self.aAmount + msg.amount;
@@ -135,23 +135,23 @@ contract Task3 with Deployable {
         });
         self.bAmount = self.bAmount - amountOfBJettonToSend;
         self.aAmount = self.aAmount + msg.amount;
-      } else {
-        send(SendParameters{
-          to: sender(),
-          value: 0,
-          mode: 64,
-          bounce: false,
-          body: TokenTransfer{
-            queryId: 0,
-            amount: msg.amount,
-            destination: msg.from,
-            responseDestination: myAddress(),
-            customPayload: null,
-            forwardTonAmount: ton("0.01"),
-            forwardPayload: emptySlice()
-          }.toCell()
-        });
+        return;
       }
+      send(SendParameters{
+        to: sender(),
+        value: 0,
+        mode: 64,
+        bounce: false,
+        body: TokenTransfer{
+          queryId: 0,
+          amount: msg.amount,
+          destination: msg.from,
+          responseDestination: myAddress(),
+          customPayload: null,
+          forwardTonAmount: ton("0.01"),
+          forwardPayload: emptySlice()
+        }.toCell()
+      });
     } else {
       throw(123);
     }
