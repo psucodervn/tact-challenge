@@ -135,7 +135,7 @@ contract Task5 with Deployable {
     send(SendParameters{
       to: self.owner,
       value: 0,
-      mode: 192,
+      mode: 128,
       body: AdminFetchProfit{
         queryId: msg.queryId
       }.toCell()
@@ -150,7 +150,7 @@ contract Task5 with Deployable {
     self.savedBalance = myBalance() - value;
 
     let i: Int = self.totalNftsHeld - 1;
-    let from: Int = max(0, i - 99);
+    let from: Int = max(0, i - 199);
     while (i >= from) {
       send(SendParameters{
         to: self.nfts.get(i)!!,
@@ -175,7 +175,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: self.owner,
         value: 0,
-        mode: 192
+        mode: 128
       });
     } else {
       send(SendParameters{
@@ -187,24 +187,13 @@ contract Task5 with Deployable {
         }.toCell()
       });
     }
-    
-    // let to: Int = self.totalNftsHeld - 1;
-    // let from: Int = max(0, to - 99);
-    // send(SendParameters{
-    //   to: myAddress(),
-    //   value: 0,
-    //   mode: 64,
-    //   body: TransferBatch{
-    //     queryId: msg.queryId
-    //   }.toCell()
-    // });
   }
 
   receive(msg: TransferBatch) {
     // require(sender() == myAddress(), "Invalid sender");
 
     let i: Int = self.totalNftsHeld - 1;
-    let from: Int = max(0, i - 99);
+    let from: Int = max(0, i - 199);
     while (i >= from) {
       send(SendParameters{
         to: self.nfts.get(i)!!,
@@ -229,7 +218,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: self.owner,
         value: 0,
-        mode: 192
+        mode: 128
       });
     } else {
       send(SendParameters{
