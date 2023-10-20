@@ -93,6 +93,7 @@ contract Task5 with Deployable {
         to: sender(),
         value: 0,
         mode: 64,
+        bounce: false,
         body: Transfer{
           queryId: msg.queryId,
           newOwner: msg.prevOwner,
@@ -117,6 +118,7 @@ contract Task5 with Deployable {
       to: swapNft,
       value: 0,
       mode: 128,
+      bounce: false,
       body: Transfer{
         queryId: msg.queryId,
         newOwner: msg.prevOwner,
@@ -136,6 +138,7 @@ contract Task5 with Deployable {
       to: self.owner,
       value: 0,
       mode: 128,
+      bounce: false,
       body: AdminFetchProfit{
         queryId: msg.queryId
       }.toCell()
@@ -156,6 +159,7 @@ contract Task5 with Deployable {
         to: self.nfts.get(i)!!,
         value: ton("0.06"),
         mode: 1,
+        bounce: false,
         body: Transfer{
           queryId: msg.queryId,
           newOwner: self.owner,
@@ -175,6 +179,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: self.owner,
         value: 0,
+        bounce: false,
         mode: 128
       });
     } else {
@@ -182,6 +187,7 @@ contract Task5 with Deployable {
         to: myAddress(),
         value: 0,
         mode: 128,
+        bounce: false,
         body: TransferBatch{
           queryId: msg.queryId
         }.toCell()
@@ -199,6 +205,7 @@ contract Task5 with Deployable {
         to: self.nfts.get(i)!!,
         value: ton("0.06"),
         mode: 1,
+        bounce: false,
         body: Transfer{
           queryId: msg.queryId,
           newOwner: self.owner,
@@ -218,6 +225,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: self.owner,
         value: 0,
+        bounce: false,
         mode: 128
       });
     } else {
@@ -225,6 +233,7 @@ contract Task5 with Deployable {
         to: myAddress(),
         value: 0,
         mode: 128,
+        bounce: false,
         body: TransferBatch{
           queryId: msg.queryId
         }.toCell()
