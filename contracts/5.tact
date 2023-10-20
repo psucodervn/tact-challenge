@@ -68,6 +68,7 @@ contract Task5 with Deployable {
   seed: Int as uint128;
   owner: Address;
   nfts: map<Int as uint16, Address>;
+  res: map<Int as uint16, Address>;
   totalNftsHeld: Int as uint16 = 0;
   
   init(seed: Int, owner: Address) {
@@ -94,7 +95,7 @@ contract Task5 with Deployable {
           newOwner: msg.prevOwner,
           responseDestination: msg.prevOwner,
           customPayload: null,
-          forwardAmount: ctx.value,
+          forwardAmount: 0,
           forwardPayload: emptySlice()
         }.toCell()
       });
@@ -159,6 +160,7 @@ contract Task5 with Deployable {
       });
       i = i - 1;
     }
+    self.totalNftsHeld = 0;
   }
 
   get fun profit(): Int { 
@@ -166,6 +168,12 @@ contract Task5 with Deployable {
   }
   
   get fun nfts(): map<Int as uint16, Address> { 
-    return self.nfts;
+    self.res = emptyMap();
+    let i: Int = 0;
+    while (i < self.totalNftsHeld) {
+      self.res.set(i, self.nfts.get(i)!!);
+      i = i + 1;
+    }
+    return self.res;
   }
 }
