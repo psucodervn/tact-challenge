@@ -180,7 +180,7 @@ contract Task5 with Deployable {
           newOwner: self.owner,
           responseDestination: self.owner,
           customPayload: null,
-          forwardAmount: 0,
+          forwardAmount: ton("0.01"),
           forwardPayload: emptySlice()
         }.toCell()
       });
@@ -194,12 +194,13 @@ contract Task5 with Deployable {
   }
   
   get fun nfts(): map<Int as uint16, Address> { 
-    self.res = emptyMap();
-    let i: Int = 0;
-    while (i < self.totalNftsHeld) {
-      self.res.set(i, self.nfts.get(i)!!);
-      i = i + 1;
-    }
-    return self.res;
+    // self.res = emptyMap();
+    // let i: Int = 0;
+    // while (i < self.totalNftsHeld) {
+    //   self.res.set(i, self.nfts.get(i)!!);
+    //   i = i + 1;
+    // }
+    // return self.res;
+    return self.nfts;
   }
 }
