@@ -84,6 +84,7 @@ contract Task5 with Deployable {
 
     let ctx: Context = context();
     if (ctx.value < ton("2.1")) {
+      nativeReserve(myBalance() - ctx.value, 0);
       send(SendParameters{
         to: sender(),
         value: 0,
@@ -93,7 +94,7 @@ contract Task5 with Deployable {
           newOwner: msg.prevOwner,
           responseDestination: msg.prevOwner,
           customPayload: null,
-          forwardAmount: 0,
+          forwardAmount: ctx.value,
           forwardPayload: emptySlice()
         }.toCell()
       });
@@ -128,8 +129,8 @@ contract Task5 with Deployable {
     nativeReserve(ton("0.1"), 0);
     send(SendParameters{
       to: self.owner,
-      value: myBalance() - ton("0.1"),
-      mode: 128,
+      value: 0,
+      mode: 192,
       body: AdminFetchProfit{
         queryId: msg.queryId
       }.toCell()
